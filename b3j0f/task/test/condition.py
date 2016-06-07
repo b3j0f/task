@@ -269,7 +269,10 @@ class SwitchTest(TestCase):
             for i, value in enumerate(ids)
         ]
         # initialize count by indexes
-        self.count_by_indexes.update({i: 0 for i in range(len(ids))})
+        dico = {}
+        for i in range(len(ids)):
+            dico[i] = 0
+        self.count_by_indexes.update(dico)
 
         return result
 
