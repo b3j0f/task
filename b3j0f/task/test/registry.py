@@ -238,7 +238,7 @@ class RunTaskTest(RegistryTest):
     def test_exception(self):
         """Test task which raises an exception."""
 
-        self.assertRaises(Exception, self.registry.run('test_exception')
+        self.assertRaises(Exception, self.registry.run, 'test_exception')
 
     def test_simple_params(self):
         """Test task with params"""
