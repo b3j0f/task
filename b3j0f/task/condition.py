@@ -55,7 +55,7 @@ def during(rrule, duration=None, timestamp=None, **kwargs):
     result = False
 
     # if rrule is a string expression
-    if isinstance(rrule, basestring):
+    if isinstance(rrule, string_types):
         rrule_object = rrule_class.rrulestr(rrule)
 
     else:

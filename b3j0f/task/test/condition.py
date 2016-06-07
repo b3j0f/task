@@ -35,6 +35,7 @@ from ..core import register
 from ..condition import (
     _any, _all, during, _not, condition, switch, STATEMENT
 )
+from ..registry import TASK_NAME, TASK_PARAMS
 
 
 @register('error')
@@ -163,8 +164,8 @@ class ConditionTest(TestCase):
     def setUp(self):
 
         self.count = 0
-        register('count', force=True)(self._count)
-        register('-count', force=True)(self._else_count)
+        register('count')(self._count)
+        register('-count')(self._else_count)
 
     def _count(self, **kwargs):
         """Statement related to checked condition."""
@@ -245,7 +246,7 @@ class SwitchTest(TestCase):
     def setUp(self):
 
         self.count_by_indexes = {'default': 0}
-        register('count', force=True)(self._count)
+        register('count')(self._count)
 
     def _count(self, index='default', **kwargs):
 
@@ -259,9 +260,9 @@ class SwitchTest(TestCase):
 
         result = [
             {
-                TASK_ID: value,
+                TASK_NAME: value,
                 STATEMENT: {
-                    TASK_ID: 'count',
+                    TASK_NAME: 'count',
                     TASK_PARAMS: {'index': i}
                 }
             }
