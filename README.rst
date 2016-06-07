@@ -62,8 +62,25 @@ pip install b3j0f.task
 Features
 --------
 
+This library performs execution of registered python routines.
+
 Example
 -------
+
+.. code-block:: python
+
+    from b3j0f.task import register, run
+
+    @register
+    @register('mytask')
+    def task(param):
+        return param
+
+    register(task, name='lastname')
+
+    assert run('task', {'param': 1}) == 1
+    assert run('mytask', {'param': 1}) == 1
+    assert run('lastname', {'param': 1}) == 1
 
 Perspectives
 ------------
