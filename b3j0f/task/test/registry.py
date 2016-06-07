@@ -157,13 +157,13 @@ class GetTaskWithParamsTest(RegistryTest):
 
         conf = self.wrong_function
 
-        self.assertRaises(KeyError, self.registry.get(conf=conf)
+        self.assertRaises(KeyError, self.registry.get, conf=conf)
 
     def test_none_task_from_dict(self):
 
         conf = {TASK_NAME: self.wrong_function}
 
-        self.assertRaises(KeyError, self.registry.get(conf=conf)
+        self.assertRaises(KeyError, self.registry.get, conf=conf)
 
     def test_task_from_str(self):
 
