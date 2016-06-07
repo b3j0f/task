@@ -24,7 +24,9 @@
 # SOFTWARE.
 # --------------------------------------------------------------------
 
-from unittest import TestCase, main
+from unittest import main
+
+from b3j0f.utils.ut import UTCase
 
 from time import time
 
@@ -53,7 +55,7 @@ def condition_false(**kwargs):
     return False
 
 
-class DuringTest(TestCase):
+class DuringTest(UTCase):
     """Test during test."""
 
     def test_inside(self):
@@ -72,7 +74,7 @@ class DuringTest(TestCase):
         self.assertFalse(result)
 
 
-class AnyTest(TestCase):
+class AnyTest(UTCase):
     """Test _any function."""
 
     def test_empty(self):
@@ -104,7 +106,7 @@ class AnyTest(TestCase):
         self.assertRaises(Exception, _any, confs=confs)
 
 
-class AllTest(TestCase):
+class AllTest(UTCase):
     """Test _all function."""
 
     def test_empty(self):
@@ -131,7 +133,7 @@ class AllTest(TestCase):
         self.assertRaises(Exception, _all, confs=confs)
 
 
-class NotTest(TestCase):
+class NotTest(UTCase):
     """Test _not operator."""
 
     def test_empty(self):
@@ -158,7 +160,7 @@ class NotTest(TestCase):
         self.assertRaises(Exception, _not, condition='error')
 
 
-class ConditionTest(TestCase):
+class ConditionTest(UTCase):
     """Test condition task."""
 
     def setUp(self):
@@ -240,7 +242,7 @@ class ConditionTest(TestCase):
         )
 
 
-class SwitchTest(TestCase):
+class SwitchTest(UTCase):
     """Test switch function."""
 
     def setUp(self):
