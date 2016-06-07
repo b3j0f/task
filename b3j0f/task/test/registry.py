@@ -157,15 +157,13 @@ class GetTaskWithParamsTest(RegistryTest):
 
         conf = self.wrong_function
 
-        with self.assertRaises(KeyError):
-            self.registry.get(conf=conf)
+        self.assertRaises(KeyError, self.registry.get(conf=conf)
 
     def test_none_task_from_dict(self):
 
         conf = {TASK_NAME: self.wrong_function}
 
-        with self.assertRaises(KeyError):
-            self.registry.get(conf=conf)
+        self.assertRaises(KeyError, self.registry.get(conf=conf)
 
     def test_task_from_str(self):
 
@@ -240,8 +238,7 @@ class RunTaskTest(RegistryTest):
     def test_exception(self):
         """Test task which raises an exception."""
 
-        with self.assertRaises(Exception):
-            self.registry.run('test_exception')
+        self.assertRaises(Exception, self.registry.run('test_exception')
 
     def test_simple_params(self):
         """Test task with params"""
