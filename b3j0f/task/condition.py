@@ -233,34 +233,44 @@ def switch(
         for conf in confs:
             # check if task has to be checked or not
             check = remaining
+
             if not check:
                 # try to check current conf
                 check = run(conf=conf, **kwargs)
+
             # if task is checked or remaining
             if check:
+
                 if STATEMENT in conf:  # if statements exist, run them
                     statement = conf[STATEMENT]
                     statement_result = run(statement, **kwargs)
+
                     # save result
                     if not remain:  # if not remain, result is statement_result
                         result = statement_result
+
                     else:  # else, add statement_result to result
                         result.append(statement_result)
+
                 # if remain
                 if remain:
                     # change of remaining status
                     if not remaining:
                         remaining = True
+
                 elif all_checked:
                     pass
+
                 else:  # leave execution if one statement has been executed
                     break
 
     # process _default statement if necessary
     if _default is not None and (remaining or (not result) or all_checked):
         last_result = run(_default, **kwargs)
+
         if not remain:
             result = last_result
+
         else:
             result.append(last_result)
 
