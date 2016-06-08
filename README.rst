@@ -64,8 +64,8 @@ Features
 
 This library performs execution of registered python routines.
 
-Example
--------
+Examples
+--------
 
 .. code-block:: python
 
@@ -73,14 +73,14 @@ Example
 
     @register
     @register('mytask')
-    def task(param):
-        return param
+    def task(a, *args, **kwargs):
+        return a
 
     register(task, name='lastname')
 
-    assert run('task', {'param': 1}) == 1
-    assert run('mytask', {'param': 1}) == 1
-    assert run('lastname', {'param': 1}) == 1
+    assert run({'name': 'task', 'kwargs': {a=1}}) == 1
+    assert run({'name': 'mytask', 'args': [2]}) == 2
+    assert run({'name': 'lastname', 'kwargs: {'a': 3}}) == 3
 
 Perspectives
 ------------

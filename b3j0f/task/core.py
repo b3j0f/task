@@ -74,6 +74,12 @@ register(register)  # save the function register.
 
 
 @register
+def gettask(name):
+
+    return _REGISTRY[name]
+
+
+@register
 def get(conf):
     """Get a task.
 
@@ -132,7 +138,7 @@ def run(conf):
 
 
 @register
-def conf(task, **params):
+def conf(task, args, kwargs):
     """Generate a new task conf related to input task id and params.
 
     :param task: task identifier.
@@ -142,7 +148,7 @@ def conf(task, **params):
     :return: {TASK_NAME: name, TASK_PARAMS: params}
     :rtype: dict"""
 
-    return _REGISTRY.conf(task, **params)
+    return _REGISTRY.conf(task, args, kwargs)
 
 
 @register

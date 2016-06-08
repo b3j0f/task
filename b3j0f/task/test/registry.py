@@ -24,12 +24,12 @@
 # SOFTWARE.
 # --------------------------------------------------------------------
 
-from unittest import TestCase, main
+from unittest import main
 
 from b3j0f.utils.ut import UTCase
 
 from b3j0f.utils.path import getpath
-from ..registry import TASK_PARAMS, TASK_NAME, Registry
+from ..registry import TASK_ARGS, TASK_KWARGS, TASK_NAME, Registry
 
 
 def test_exception(**kwargs):
@@ -101,7 +101,7 @@ class GetTaskTest(RegistryTest):
 
         getTaskTest = getpath(GetTaskTest)
         self.registry.register(name=getTaskTest, task=GetTaskTest)
-        task, _ = self.registry.get(getTaskTest)
+        task, _, _ = self.registry.get(getTaskTest)
         self.assertEqual(task, GetTaskTest)
 
     def test_get_registeredtask(self):
@@ -109,7 +109,7 @@ class GetTaskTest(RegistryTest):
 
         _id = 'a'
         self.registry.register(name=_id, task=GetTaskTest)
-        task, _ = self.registry.get(_id)
+        task, _, _ = self.registry.get(_id)
         self.assertEqual(task, GetTaskTest)
 
 
@@ -169,7 +169,7 @@ class GetTaskWithParamsTest(RegistryTest):
 
         conf = self.existing_function
 
-        task, params = self.registry.get(conf=conf)
+        task, _, params = self.registry.get(conf=conf)
 
         self.assertEqual((task, params), (open, {}))
 
@@ -177,7 +177,7 @@ class GetTaskWithParamsTest(RegistryTest):
 
         conf = {TASK_NAME: self.existing_function}
 
-        task, params = self.registry.get(conf=conf)
+        task, _, params = self.registry.get(conf=conf)
 
         self.assertEqual((task, params), (open, {}))
 
@@ -187,9 +187,10 @@ class GetTaskWithParamsTest(RegistryTest):
 
         conf = {
             TASK_NAME: self.existing_function,
-            TASK_PARAMS: param}
+            TASK_KWARGS: param
+        }
 
-        task, params = self.registry.get(conf=conf)
+        task, _, params = self.registry.get(conf=conf)
 
         self.assertEqual((task, params), (open, param))
 
@@ -197,17 +198,17 @@ class GetTaskWithParamsTest(RegistryTest):
 
         conf = self.existing_function
 
-        task_not_cached_0, _ = self.registry.get(conf=conf)
+        task_not_cached_0, _, _ = self.registry.get(conf=conf)
 
-        task_not_cached_1, _ = self.registry.get(conf=conf)
+        task_not_cached_1, _, _ = self.registry.get(conf=conf)
 
-        self.assertTrue(task_not_cached_0 is task_not_cached_1)
+        self.assertIs(task_not_cached_0, task_not_cached_1)
 
-        task_cached_0, _ = self.registry.get(conf=conf)
+        task_cached_0, _, _ = self.registry.get(conf=conf)
 
-        task_cached_1, _ = self.registry.get(conf=conf)
+        task_cached_1, _, _ = self.registry.get(conf=conf)
 
-        self.assertTrue(task_cached_0 is task_cached_1)
+        self.assertIs(task_cached_0, task_cached_1)
 
 
 class RunTaskTest(RegistryTest):
@@ -244,7 +245,7 @@ class RunTaskTest(RegistryTest):
         """Test task with params"""
 
         conf = self.registry.conf(
-            'test_params', {'a': 1, 'b': 2, 'ctx': {'a': 1}}
+            'test_params', [], {'a': 1, 'b': 2, 'ctx': {'a': 1}}
         )
         result = self.registry.run(conf)
         self.assertEqual(result, 5)
@@ -257,23 +258,23 @@ class NewConfTest(RegistryTest):
         """Test to generate a new conf with only an id."""
 
         conf = self.registry.conf('a')
-        self.assertEqual(conf, {TASK_NAME: 'a', TASK_PARAMS: {}})
+        self.assertEqual(conf, {TASK_NAME: 'a', TASK_ARGS: [], TASK_KWARGS: {}})
 
     def test_with_empty_params(self):
         """Test to generate a new conf with empty params."""
 
-        conf = self.registry.conf('a', {})
+        conf = self.registry.conf('a', [], {})
 
-        self.assertEqual(conf, {TASK_NAME: 'a', TASK_PARAMS: {}})
+        self.assertEqual(conf, {TASK_NAME: 'a', TASK_ARGS: [], TASK_KWARGS: {}})
 
     def test_with_params(self):
         """Test to generate a new conf with params."""
 
         params = {'a': 1}
-        conf = self.registry.conf('a', params)
+        conf = self.registry.conf('a', [], params)
 
         self.assertEqual(conf[TASK_NAME], 'a')
-        self.assertEqual(conf[TASK_PARAMS], params)
+        self.assertEqual(conf[TASK_KWARGS], params)
 
     def test_with_routine(self):
         """Test to generate a new conf related to a task routine."""
@@ -290,10 +291,10 @@ class NewConfTest(RegistryTest):
         self.registry.register(open)
 
         params = {'a': 1}
-        conf = self.registry.conf(open, params)
+        conf = self.registry.conf(open, [], params)
 
         self.assertEqual(conf[TASK_NAME], getpath(open))
-        self.assertEqual(conf[TASK_PARAMS], params)
+        self.assertEqual(conf[TASK_KWARGS], params)
 
 
 if __name__ == '__main__':

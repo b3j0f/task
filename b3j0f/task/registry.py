@@ -23,14 +23,12 @@
 # SOFTWARE.
 # --------------------------------------------------------------------
 
-__all__ = ['Registry', 'TASK_NAME', 'TASK_PARAMS']
+__all__ = ['Registry', 'TASK_NAME', 'TASK_ARGS', 'TASK_KWARGS']
 
 from six import string_types
 
-from b3j0f.utils.path import lookup, getpath
+from b3j0f.utils.path import getpath
 from b3j0f.conf import Configurable
-
-from inspect import isroutine
 
 """Task module.
 
@@ -46,11 +44,12 @@ A task respects those types::
    - str: task name to execute.
    - dict:
       + id: task name to execute.
-      + params: dict of task parameters.
+      + kwargs: dict of task parameters.
 """
 
 TASK_NAME = 'name'  #: task id field name in task conf
-TASK_PARAMS = 'params'  #: task params field name in task conf
+TASK_ARGS = 'args'  #: task args field name in task conf
+TASK_KWARGS = 'kwargs'  #: task kwargs field name in task conf
 
 
 @Configurable(paths='task.conf')
@@ -196,14 +195,18 @@ class Registry(object):
 
         :param conf: configuration
         :type conf: str or dict.
-        :return: task with params.
+        :return: task with kwargs.
         :rtype: tuple"""
 
         if isinstance(conf, string_types):
-            result = self._registry[conf], {}
+            result = self._registry[conf], [], {}
 
         elif isinstance(conf, dict):
-            result = self._registry[conf[TASK_NAME]], conf.get(TASK_PARAMS, {})
+            result = (
+                self._registry[conf[TASK_NAME]],
+                conf.get(TASK_ARGS, []),
+                conf.get(TASK_KWARGS, {})
+            )
 
         return result
 
@@ -212,29 +215,31 @@ class Registry(object):
 
         :return: execution of input configuration."""
 
-        task, params = self.get(conf=conf)
+        task, args, kwargs = self.get(conf=conf)
 
-        return task(**params)
+        return task(*args, **kwargs)
 
-    def conf(self, task, params=None):
-        """
-        Generate a new task conf related to input task id and params.
+    def conf(self, task, args=None, kwargs=None):
+        """Generate a new task conf related to input task id and kwargs.
 
         :param task: task identifier.
         :type task: str or routine
-        :param dict params: task parameters.
+        :param dict kwargs: task parameters.
 
-        :return: {TASK_NAME: name, TASK_PARAMS: params}
+        :return: {TASK_NAME: name, TASK_KWARGS: kwargs}
         :rtype: dict
         """
 
-        if params is None:
-            params = {}
+        if args is None:
+            args = []
+
+        if kwargs is None:
+            kwargs = {}
 
         # if task is a task routine, find the corresponding task id
         if callable(task):
             task = self.getname(task)
 
-        result = {TASK_NAME: task, TASK_PARAMS: params}
+        result = {TASK_NAME: task, TASK_ARGS: args, TASK_KWARGS: kwargs}
 
         return result

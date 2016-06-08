@@ -37,7 +37,7 @@ from ..core import register
 from ..condition import (
     _any, _all, during, _not, condition, switch, STATEMENT
 )
-from ..registry import TASK_NAME, TASK_PARAMS
+from ..registry import TASK_NAME, TASK_ARGS, TASK_KWARGS
 
 
 @register('error')
@@ -265,7 +265,8 @@ class SwitchTest(UTCase):
                 TASK_NAME: value,
                 STATEMENT: {
                     TASK_NAME: 'count',
-                    TASK_PARAMS: {'index': i}
+                    TASK_ARGS: [],
+                    TASK_KWARGS: {'index': i}
                 }
             }
             for i, value in enumerate(ids)

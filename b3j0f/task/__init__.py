@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------
 
 
-__all__ = ['__version__', 'get', 'register', 'run', 'conf']
+__all__ = ['__version__', 'get', 'register', 'run', 'conf', 'gettask']
 
 from .version import __version__
-from .core import get, register, run, conf
+from .core import get, register, run, conf, gettask
